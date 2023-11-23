@@ -2,12 +2,14 @@ const Downloads = [
     {
         ver: "1.0.1",
         dir: "assets/skiomox/1.0.1-skiomox-extension.zip",
-        type: "Beta"
+        type: "Beta",
+        size: "224.3 KB"
     },
     {
         ver: "1.0.0",
         dir: "assets/skiomox/1.0.0-skiomox-extension.zip",
-        type: "Beta"
+        type: "Beta",
+        size: "32.1 KB"
     }
 ]
 
@@ -15,17 +17,20 @@ const DevDownloads = [
     {
         ver: "1.0.2",
         dir: "assets/skiomoxDevBuilds/1.0.2-dev1-skiomox-extension.zip",
-        type: "near-stable"
+        type: "near-stable",
+        size: "31.7 MB"
     }
 ]
 
 const th1Item = "Version"
 const th2Item = "Stage"
-const th3Item = "Download"
+const th3Item = "Size"
+const th4Item = "Download"
 
 const th1ItemDev = "Version"
 const th2ItemDev = "Stage"
-const th3ItemDev = "Download"
+const th3ItemDev = "Size"
+const th4ItemDev = "Download"
 
 const searchItems = ["All", "Stable", "Beta"]
 
@@ -88,6 +93,9 @@ window.onload = function () {
     var th3 = document.createElement("th")
     th3.innerHTML = th3Item
     topTr.appendChild(th3)
+    var th4 = document.createElement("th")
+    th4.innerHTML = th4Item
+    topTr.appendChild(th4)
 
     Downloads.forEach(item => {
         var parentTr = document.createElement("tr");
@@ -101,15 +109,19 @@ window.onload = function () {
         item2.innerHTML = item.type
 
         var item3 = document.createElement("td")
+        item3.innerHTML = item.size
+
+        var item4 = document.createElement("td")
         var aItem = document.createElement("a")
         aItem.href = item.dir
-        aItem.innerHTML = th3Item
+        aItem.innerHTML = th4Item
 
-        item3.appendChild(aItem)
+        item4.appendChild(aItem)
 
         parentTr.appendChild(item1)
         parentTr.appendChild(item2)
         parentTr.appendChild(item3)
+        parentTr.appendChild(item4)
     });
 
     var tempParaDev = document.createElement("h2");
@@ -134,6 +146,9 @@ window.onload = function () {
     var th3 = document.createElement("th")
     th3.innerHTML = th3ItemDev
     topTrDev.appendChild(th3)
+    var th4 = document.createElement("th")
+    th4.innerHTML = th4ItemDev
+    topTrDev.appendChild(th4)
 
     DevDownloads.forEach(item => {
         var parentTr = document.createElement("tr");
@@ -145,17 +160,21 @@ window.onload = function () {
         
         var item2 = document.createElement("td")
         item2.innerHTML = item.type
-
+        
         var item3 = document.createElement("td")
+        item3.innerHTML = item.size
+
+        var item4 = document.createElement("td")
         var aItem = document.createElement("a")
         aItem.href = item.dir
-        aItem.innerHTML = th3ItemDev
-
-        item3.appendChild(aItem)
+        aItem.innerHTML = th4Item
+        
+        item4.appendChild(aItem)
 
         parentTr.appendChild(item1)
         parentTr.appendChild(item2)
         parentTr.appendChild(item3)
+        parentTr.appendChild(item4)
     });
 
     var tip = document.createElement("h1")
