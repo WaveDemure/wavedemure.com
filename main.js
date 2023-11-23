@@ -157,6 +157,13 @@ window.onload = function () {
         parentTr.appendChild(item2)
         parentTr.appendChild(item3)
     });
+
+    var tip = document.createElement("h1")
+    tip.style.color = "white"
+    tip.style.textAlign = "center"
+    tip.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif"
+    tip.innerHTML = "If downloads are not finishing go to chrome://downloads and press keep"
+    document.body.appendChild(tip)
 }
 
 function updateSelect() {
