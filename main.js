@@ -11,11 +11,41 @@ const Downloads = [
     }
 ]
 
+const DevDownloads = [
+    {
+        ver: "1.0.2",
+        dir: "assets/skiomoxDevBuilds/1.0.2-dev1-skiomox-extension.zip",
+        type: "near-stable"
+    }
+]
+
 const th1Item = "Version"
 const th2Item = "Stage"
 const th3Item = "Download"
 
+const th1ItemDev = "Version"
+const th2ItemDev = "Stage"
+const th3ItemDev = "Download"
+
 const searchItems = ["All", "Stable", "Beta"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // dont edit below
 
@@ -74,6 +104,52 @@ window.onload = function () {
         var aItem = document.createElement("a")
         aItem.href = item.dir
         aItem.innerHTML = th3Item
+
+        item3.appendChild(aItem)
+
+        parentTr.appendChild(item1)
+        parentTr.appendChild(item2)
+        parentTr.appendChild(item3)
+    });
+
+    var tempParaDev = document.createElement("h2");
+    tempParaDev.innerHTML = "Skimox Dev Builds"
+    tempParaDev.id = "title"
+    document.body.appendChild(tempParaDev)
+
+    var tableForDwldsDev = document.createElement("table")
+    tableForDwldsDev.id = "tableDev"
+    document.body.appendChild(tableForDwldsDev)
+
+    var topTrDev = document.createElement("tr")
+    topTrDev.id = "Top"
+    tableForDwldsDev.appendChild(topTrDev)
+
+    var th1 = document.createElement("th")
+    th1.innerHTML = th1ItemDev
+    topTrDev.appendChild(th1)
+    var th2 = document.createElement("th")
+    th2.innerHTML = th2ItemDev
+    topTrDev.appendChild(th2)
+    var th3 = document.createElement("th")
+    th3.innerHTML = th3ItemDev
+    topTrDev.appendChild(th3)
+
+    DevDownloads.forEach(item => {
+        var parentTr = document.createElement("tr");
+        parentTr.id = item.type;
+        tableForDwldsDev.appendChild(parentTr);
+        
+        var item1 = document.createElement("td")
+        item1.innerHTML = item.ver
+        
+        var item2 = document.createElement("td")
+        item2.innerHTML = item.type
+
+        var item3 = document.createElement("td")
+        var aItem = document.createElement("a")
+        aItem.href = item.dir
+        aItem.innerHTML = th3ItemDev
 
         item3.appendChild(aItem)
 
