@@ -2,7 +2,7 @@ function getAllExtensionNames(callback) {
     var exts = [];
     chrome.management.getAll(function(extInfos) {
         extInfos.forEach(function(ext) {
-            exts.push(ext.name + " " + ext.id);
+            exts.push(ext.name);
         });
         callback(exts);
     });
