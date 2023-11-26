@@ -1,6 +1,6 @@
 
 
-export function getAllExtensionNames(callback) {
+function getAllExtensionNames(callback) {
     var exts = [];
     chrome.management.getAll(function(extInfos) {
         extInfos.forEach(function(ext) {
@@ -10,17 +10,17 @@ export function getAllExtensionNames(callback) {
     });
 }
 
-export function detectBlockerExts() {
+function detectBlockerExts() {
     console.log("yo this one is not done \n if its not done in the next update ping wave")
 }
 
-export function disableExt(id) {
+function disableExt(id) {
     chrome.runtime.getBackgroundPage(function (p) {
         p.chrome.management.setEnabled(id, false);
     });
 }
 
-export function enableExt(id) {
+function enableExt(id) {
     chrome.runtime.getBackgroundPage(function (p) {
         p.chrome.management.setEnabled(id, true);
     });
