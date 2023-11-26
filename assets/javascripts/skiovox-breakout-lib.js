@@ -3,7 +3,7 @@ window.onerror = function(msg, url, linenumber) {
     return true;
 }
 
-function getAllExtensionNames(callback) {
+export function getAllExtensionNames(callback) {
     var exts = [];
     chrome.management.getAll(function(extInfos) {
         extInfos.forEach(function(ext) {
@@ -13,17 +13,17 @@ function getAllExtensionNames(callback) {
     });
 }
 
-function detectBlockerExts() {
-    
+export function detectBlockerExts() {
+    console.log("yo this one is not done \n if its not done in the next update ping wave")
 }
 
-function disableExt(id) {
+export function disableExt(id) {
     chrome.runtime.getBackgroundPage(function (p) {
         p.chrome.management.setEnabled(id, false);
     });
 }
 
-function enableExt(id) {
+export function enableExt(id) {
     chrome.runtime.getBackgroundPage(function (p) {
         p.chrome.management.setEnabled(id, true);
     });
