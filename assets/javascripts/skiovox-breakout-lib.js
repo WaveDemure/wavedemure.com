@@ -1,7 +1,4 @@
-window.onerror = function(msg, url, linenumber) {
-    alert('Error message: '+msg+'\nLine Number: '+linenumber);
-    return true;
-}
+
 
 export function getAllExtensionNames(callback) {
     var exts = [];
