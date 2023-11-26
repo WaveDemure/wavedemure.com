@@ -1,5 +1,3 @@
-
-
 function getAllExtensionNames(callback) {
     var exts = [];
     chrome.management.getAll(function(extInfos) {
