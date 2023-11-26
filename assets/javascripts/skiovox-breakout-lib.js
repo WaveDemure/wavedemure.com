@@ -9,7 +9,7 @@ function getAllExtensionNames(callback) {
 }
 
 function detectBlockerExts() {
-    console.log("yo this one is not done \n if its not done in the next update ping wave")
+    alert("Error : detectBlockerExts \n yo this one is not done \n if its not done in the next update ping wave")
 }
 
 function disableExt(id) {
