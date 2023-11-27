@@ -8,6 +8,16 @@ function getAllExtensionNames(callback) {
     });
 }
 
+function getAllExtensionIds(callback) {
+    var extsI = [];
+    chrome.management.getAll(function(extInfos) {
+        extInfos.forEach(function(ext) {
+            extsI.push(ext.name);
+        });
+        callback(extsI);
+    });
+}
+
 function detectBlockerExts() {
     alert("Error : detectBlockerExts \n yo this one is not done \n if its not done in the next update ping wave")
 }
