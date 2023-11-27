@@ -94,6 +94,11 @@ window.onload = function () {
     }
     code_exec_div.appendChild(run_code);
 
+    // on page code exec
+
+    
+
+
     // payloads
 
     var payload_div = document.createElement("div");
@@ -101,7 +106,7 @@ window.onload = function () {
     payload_div.style.margin = "30px"
     document.body.appendChild(payload_div);
 
-    // NEW AUTO DETECT PAYLOAD
+    // NEW AUTO DETECT PAYLOAD soon
 
     // var auto_detect_payload = document.createElement("a")
 
