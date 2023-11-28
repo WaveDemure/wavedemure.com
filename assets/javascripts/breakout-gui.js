@@ -1,157 +1,232 @@
-window.onerror = function(msg, url, linenumber) {
-    if (document.getElementById("code_error")) {
-        document.getElementById("code_error").value = document.getElementById("code_error").value + '\nError message: '+msg+'\nLine Number: '+linenumber
-    } else {
-        alert('Error message: '+msg+'\nLine Number: '+linenumber);
-    }
-    return true;
-}
+document.addEventListener("DOMContentLoaded", function () {
+    addSlideUpAnimation("body");
+    addSlideUpAnimation("h1, h2, textarea, input, button, .payloads");
 
-function getAllExtensionNames(callback) {
-    var exts = [];
-    chrome.management.getAll(function(extInfos) {
-        extInfos.forEach(function(ext) {
-            exts.push(ext.name + " " + ext.id);
+    function addSlideUpAnimation(selector) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.style.opacity = "0";
+            element.style.transition = "transform 1s, opacity 1s";
+            element.style.transform = "translateY(20px)";
+            setTimeout(() => {
+                element.style.opacity = "1";
+                element.style.transform = "translateY(0)";
+            }, 100);
         });
-        callback(exts);
-    });
-}
-
-function detectBlockerExts() {
-    alert("Error : detectBlockerExts \n yo this one is not done \n if its not done in the next update ping wave")
-}
-
-function disableExt(id) {
-    chrome.runtime.getBackgroundPage(function (p) {
-        p.chrome.management.setEnabled(id, false);
-    });
-}
-
-function enableExt(id) {
-    chrome.runtime.getBackgroundPage(function (p) {
-        p.chrome.management.setEnabled(id, true);
-    });
-}
-
-window.onload = function () {
-    document.body.style.backgroundColor = "#2e2e2e";
-
-    var title = document.createElement("h1");
-    title.innerHTML = "Skiovox breakout gui";
-    title.style.fontSize = "400%"
-    title.style.color = "white";
-    title.style.textAlign = "center";
-    document.body.appendChild(title);
-
-    var extLoaded = document.createElement("h2");
-    extLoaded.innerHTML = "loaded on "+chrome.runtime.id;
-    extLoaded.style.color = "white";
-    extLoaded.style.textAlign = "center";
-    document.body.appendChild(extLoaded)
-    // here we go
-
-    var subTitle = document.createElement("h2");
-    subTitle.style.color = "white";
-    subTitle.style.textAlign = "center";
-    subTitle.innerHTML = "Javascript executor";
-    document.body.appendChild(subTitle);
-
-    var code_exec_div = document.createElement("div");
-    code_exec_div.style.display = "flex";
-    document.body.appendChild(code_exec_div);
-
-    var codeExec = document.createElement("textarea");
-    codeExec.id = "codeExec";
-    codeExec.style.color = "white";
-    codeExec.style.resize = "none";
-    codeExec.innerHTML = "alert(1);";
-    codeExec.style.display = "codeExec";
-    codeExec.style.backgroundColor = "#00821e";
-    codeExec.style.border = "2px solid #00631a";
-    codeExec.style.width = "50vw";
-    codeExec.style.height = "30vh";
-    code_exec_div.appendChild(codeExec);
-
-    var error_out = document.createElement("textarea");
-    error_out.id = "code_error";
-    error_out.placeholder = "error log and debug log"
-    error_out.style.color = "white";
-    error_out.style.backgroundColor = "#025415";
-    error_out.style.width = "50vw";
-    error_out.style.resize = "none"
-    error_out.disabled = true;
-    code_exec_div.appendChild(error_out);
-
-    var run_code = document.createElement("button");
-    run_code.style.display = "absolute";
-    run_code.style.backgroundColor = "#00821e"
-    run_code.style.border = "2px solid #00631a"
-    run_code.innerHTML = "Run!";
-    run_code.style.left = "50vw";
-    run_code.style.color = "white";
-    run_code.onclick = function () {
-        eval(document.getElementById("codeExec").value);
     }
-    code_exec_div.appendChild(run_code);
 
-    // on page code exec
-
-    
-
-
-    // payloads
-
-    var payload_div = document.createElement("div");
-    payload_div.className = "payloads";
-    payload_div.style.margin = "30px"
-    document.body.appendChild(payload_div);
-
-    // NEW AUTO DETECT PAYLOAD soon
-
-    // var auto_detect_payload = document.createElement("a")
-
-
-    // gogaurdian payloads
-    
-    var GG_payload_disable = document.createElement("a");
-    GG_payload_disable.innerHTML = "Disable Goguardian";
-    GG_payload_disable.style.color = "white";
-    GG_payload_disable.style.margin = "5px"
-    GG_payload_disable.style.textAlign = "center";
-    GG_payload_disable.style.padding = "2vh 2vw";
-    GG_payload_disable.style.backgroundColor = "#00631a";
-    GG_payload_disable.onclick = function () {
-        if (!location.href.includes(chrome.runtime.id)) {
-            disableExt("haldlgldplgnggkjaafhelgiaglafanh");
+    window.onerror = function (msg, url, linenumber) {
+        const errorElement = document.getElementById("code_error");
+        if (errorElement) {
+            errorElement.value += `\nError message: ${msg}\nLine Number: ${linenumber}`;
         } else {
-            alert("Error: Cant disable extension that is being used for this page\nExt Id = " + chrome.runtime.id);
+            alert(`Error message: ${msg}\nLine Number: ${linenumber}`);
+        }
+        return true;
+    };
+
+    function getAllExtensionNames(callback) {
+        chrome.management.getAll(function (extInfos) {
+            const exts = extInfos.map(ext => ({ name: ext.name, id: ext.id }));
+            callback(exts);
+        });
+    }
+    
+    function enableExt(id, button) {
+        chrome.management.setEnabled(id, true, function () {
+            button.style.backgroundColor = "#00821e"; // Green
+        });
+    }
+    
+    function disableExt(id, button) {
+        if (id !== chrome.runtime.id) {
+            chrome.management.setEnabled(id, false, function () {
+                button.style.backgroundColor = "#ff0000"; // Red
+            });
+        } else {
+            const errorMsg = `Error: Can't Disable extension that is being used for this page\nExt Id = ${id}`;
+            alert(errorMsg);
         }
     }
-    payload_div.appendChild(GG_payload_disable);
 
-    var GG_payload_enable = document.createElement("a");
-    GG_payload_enable.innerHTML = "Enable Goguardian";
-    GG_payload_enable.style.margin = "5px"
-    GG_payload_enable.style.color = "white";
-    GG_payload_enable.style.textAlign = "center";
-    GG_payload_enable.style.padding = "2vh 2vw"
-    GG_payload_enable.style.backgroundColor = "#00631a"
-    GG_payload_enable.onclick = function() {
-        enableExt("haldlgldplgnggkjaafhelgiaglafanh")
+    function createTitle(text, fontSize, marginTop) {
+        const title = document.createElement("h1");
+        title.innerHTML = text;
+        title.style.fontSize = fontSize;
+        title.style.color = "white";
+        title.style.textAlign = "center";
+        title.style.marginTop = marginTop;
+        return title;
     }
-    payload_div.appendChild(GG_payload_enable);
 
-    var debug_items = document.createElement("a");
-    debug_items.innerHTML = "Debugging";
-    debug_items.style.margin = "5px"
-    debug_items.style.color = "white";
-    debug_items.style.textAlign = "center";
-    debug_items.style.padding = "2vh 2vw"
-    debug_items.style.backgroundColor = "#00631a"
-    debug_items.onclick = function () {
-        getAllExtensionNames(function(names) {
-            alert(names);
+    function createTextArea(id, placeholder, backgroundColor) {
+        const textarea = document.createElement("textarea");
+        textarea.id = id;
+        textarea.placeholder = placeholder;
+        textarea.style.color = "white";
+        textarea.style.resize = "none";
+        textarea.style.backgroundColor = backgroundColor;
+        textarea.style.border = "2px solid #00631a";
+        textarea.style.padding = "10px";
+        return textarea;
+    }
+
+    function createInput(placeholder, id, backgroundColor, width, height) {
+        const input = document.createElement("input");
+        input.placeholder = placeholder;
+        input.id = id;
+        input.style.color = "white";
+        input.style.display = "flex";
+        input.style.resize = "none";
+        input.style.backgroundColor = backgroundColor;
+        input.style.border = "2px solid #00631a";
+        input.style.width = width;
+        input.style.height = height;
+        input.style.padding = "10px";
+        return input;
+    }
+
+    function createButton(text, onclick) {
+        const button = document.createElement("button");
+        button.style.backgroundColor = "#00821e";
+        button.style.border = "2px solid #00631a";
+        button.innerHTML = text;
+        button.style.color = "white";
+        button.style.margin = "5px";
+        button.style.padding = "10px";
+        button.onclick = onclick;
+        return button;
+    }
+
+    function runCode() {
+        eval(document.getElementById("codeExec").value);
+    }
+
+    document.body.style.backgroundColor = "#2e2e2e";
+
+    const title = createTitle("Skiovox Breakout GUI", "3em", "20px");
+    document.body.appendChild(title);
+
+    const extLoaded = createTitle(`Loaded on ${chrome.runtime.id}`, "2em", "10px");
+    document.body.appendChild(extLoaded);
+
+    const subTitle = createTitle("Javascript Executor", "2em", "20px");
+    document.body.appendChild(subTitle);
+
+    const codeExecDiv = document.createElement("div");
+    codeExecDiv.style.display = "flex";
+    codeExecDiv.style.marginTop = "10px";
+    document.body.appendChild(codeExecDiv);
+
+    const codeExec = createTextArea("codeExec", "", "#00821e");
+    codeExec.innerHTML = "alert(1);";
+    codeExec.style.width = "50vw";
+    codeExec.style.height = "30vh";
+    codeExecDiv.appendChild(codeExec);
+
+    const errorOut = createTextArea("code_error", "Error log and debug log", "#025415");
+    errorOut.style.width = "50vw";
+    errorOut.style.resize = "none";
+    errorOut.disabled = true;
+    codeExecDiv.appendChild(errorOut);
+
+    const runCodeButton = createButton("Run!", runCode);
+    runCodeButton.style.marginLeft = "auto";
+    runCodeButton.style.marginRight = "auto";
+    codeExecDiv.appendChild(runCodeButton);
+
+    const subTitle2 = createTitle("Bookmarklet Emulator", "2em", "20px");
+    document.body.appendChild(subTitle2);
+
+    const pageExecWrapper = document.createElement("div");
+    pageExecWrapper.style.display = "flex";
+    pageExecWrapper.style.alignItems = "center";
+    pageExecWrapper.style.justifyItems = "center";
+    pageExecWrapper.style.marginTop = "10px";
+    document.body.appendChild(pageExecWrapper);
+
+    const inputBox = createInput("Enter code", "input_box", "#00821e", "50vw", "10vh");
+    pageExecWrapper.appendChild(inputBox);
+
+    const codeBoxBook = createTextArea("code_box_book", "Code", "#00821e");
+    codeBoxBook.value = "alert(1);";
+    codeBoxBook.style.width = "50vw";
+    codeBoxBook.style.height = "10vh";
+    pageExecWrapper.appendChild(codeBoxBook);
+
+    const runBookmarkletButton = createButton("Run Bookmarklet", function () {
+        const url = document.getElementById("input_box").value;
+        const script = document.getElementById("code_box_book").value;
+
+        chrome.tabs.create({ url: url }, (tab) => {
+            chrome.tabs.executeScript(tab.id, { code: script });
         });
-    }
-    payload_div.appendChild(debug_items);
-}
+    });
+    runBookmarkletButton.style.marginLeft = "auto";
+    runBookmarkletButton.style.marginRight = "auto";
+    pageExecWrapper.appendChild(runBookmarkletButton);
+
+    const subTitle3 = createTitle("Payloads", "2em", "20px");
+    document.body.appendChild(subTitle3);
+
+    const payloadDiv = document.createElement("div");
+    payloadDiv.className = "payloads";
+    payloadDiv.style.margin = "30px";
+    document.body.appendChild(payloadDiv);
+
+    function createPayloadButtons(exts) {
+        const payloadsPerRow = 1;
+    
+        exts.forEach(function (ext, index) {
+            const payloadSection = document.createElement("div");
+            payloadSection.style.margin = "0 10px 20px 10px"; // Adjust the margin as needed
+            payloadSection.style.textAlign = "center";
+            payloadDiv.appendChild(payloadSection);
+    
+            const subtitle = createTitle(`${ext.name} - Payloads`, "1.5em", "10px");
+            subtitle.style.textAlign = "center";
+            payloadSection.appendChild(subtitle);
+    
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.textAlign = "center";
+            buttonContainer.style.display = "flex"; // Set display to "flex"
+            buttonContainer.style.flexDirection = "column"; // Align buttons vertically
+            buttonContainer.style.gap = "10px"; // Add some spacing between buttons
+            buttonContainer.style.justifyContent = "center"; // Center the buttons horizontally
+            buttonContainer.style.alignItems = "center"; // Center the buttons vertically
+            payloadSection.appendChild(buttonContainer);
+    
+            const buttonWidth = "120px"; // Set the width as needed
+            const buttonHeight = "40px"; // Set the height as needed
+    
+            const buttonStyle = `
+                width: ${buttonWidth};
+                height: ${buttonHeight};
+                background-color: #00821e;
+                border: 2px solid #00631a;
+                color: white;
+                margin: 5px;
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            `;
+    
+            const enableButton = createButton(`Enable`, function () {
+                enableExt(ext.id, enableButton);
+            });
+            enableButton.style.cssText = buttonStyle;
+            buttonContainer.appendChild(enableButton);
+    
+            const disableButton = createButton(`Disable`, function () {
+                disableExt(ext.id, disableButton);
+            });
+            disableButton.style.cssText = buttonStyle + "background-color: #ff0000;"; // Red background for disable button
+            buttonContainer.appendChild(disableButton);
+        });
+    }    
+    
+    getAllExtensionNames(function (exts) {
+        createPayloadButtons(exts);
+    });   
+    
+});
